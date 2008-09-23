@@ -10,7 +10,7 @@ module Pony
 	####################
 
 	def self.mail_inner(options)
-		send_tmail build_tmail(options)
+		transport_via_sendmail build_tmail(options)
 	end
 
 	def self.build_tmail(options)
@@ -22,7 +22,13 @@ module Pony
 		mail
 	end
 
-	def self.send_tmail(tmail)
+	def self.transport_via_sendmail(tmail)
+		IO.popen("/usr/sbin/sendmail #{tmail.to}", "w") do |pipe|
+			pipe.write tmail.to_s
+		end
+	end
+
+	def self.transport_via_smtp(tmail)
 		Net::SMTP.start('localhost') do |smtp|
 			smtp.sendmail(tmail.to_s, tmail.from, tmail.to)
 		end
