@@ -1,11 +1,14 @@
 require File.dirname(__FILE__) + '/base'
 
 describe Pony do
-	describe "API" do
-		it "simplest possible syntax: mail(to, body)" do
-			Pony.should_receive(:mail_inner).with(:to => 'joe@example.com', :body => 'Hello, Joe!')
-			Pony.mail('joe@example.com', 'Hello, Joe!')
+	it "sends mail" do
+		Pony.should_receive(:transport) do |tmail|
+			tmail.to.should == [ 'joe@example.com' ]
+			tmail.from.should == [ 'sender@example.com' ]
+			tmail.subject.should == 'hi'
+			tmail.body.should == 'Hello, Joe.'
 		end
+		Pony.mail(:to => 'joe@example.com', :from => 'sender@example.com', :subject => 'hi', :body => 'Hello, Joe.')
 	end
 
 	####################
@@ -19,6 +22,10 @@ describe Pony do
 			Pony.build_tmail(:from => 'joe@example.com').from.should == [ 'joe@example.com' ]
 		end
 
+		it "from (default)" do
+			Pony.build_tmail({}).from.should == [ 'pony@unknown' ]
+		end
+
 		it "subject" do
 			Pony.build_tmail(:subject => 'hello').subject.should == 'hello'
 		end
@@ -28,7 +35,19 @@ describe Pony do
 		end
 	end
 
-	describe "transports" do
+	describe "transport" do
+		it "transports via the sendmail binary if it exists" do
+			Pony.stub!(:sendmail_binary).and_return(__FILE__)
+			Pony.should_receive(:transport_via_sendmail).with(:tmail)
+			Pony.transport(:tmail)
+		end
+
+		it "transports via smtp if no sendmail binary" do
+			Pony.stub!(:sendmail_binary).and_return('/does/not/exist')
+			Pony.should_receive(:transport_via_smtp).with(:tmail)
+			Pony.transport(:tmail)
+		end
+
 		it "transports mail via /usr/sbin/sendmail binary" do
 			pipe = mock('sendmail pipe')
 			IO.should_receive(:popen).with('/usr/sbin/sendmail to', 'w').and_yield(pipe)

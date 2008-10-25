@@ -3,14 +3,8 @@ require 'net/smtp'
 require 'tmail'
 
 module Pony
-	def self.mail(to, body)
-		mail_inner(:to => to, :body => body)
-	end
-
-	####################
-
-	def self.mail_inner(options)
-		transport_via_sendmail build_tmail(options)
+	def self.mail(options)
+		transport build_tmail(options)
 	end
 
 	def self.build_tmail(options)
@@ -22,8 +16,20 @@ module Pony
 		mail
 	end
 
+	def self.sendmail_binary
+		"/usr/sbin/sendmail"
+	end
+
+	def self.transport(tmail)
+		if File.exists? sendmail_binary
+			transport_via_sendmail(tmail)
+		else
+			transport_via_smtp(tmail)
+		end
+	end
+
 	def self.transport_via_sendmail(tmail)
-		IO.popen("/usr/sbin/sendmail #{tmail.to}", "w") do |pipe|
+		IO.popen("#{sendmail_binary} #{tmail.to}", "w") do |pipe|
 			pipe.write tmail.to_s
 		end
 	end
