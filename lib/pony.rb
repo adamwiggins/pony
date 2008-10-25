@@ -4,6 +4,7 @@ require 'tmail'
 
 module Pony
 	def self.mail(options)
+		raise(ArgumentError, ":to is required") unless options[:to]
 		transport build_tmail(options)
 	end
 

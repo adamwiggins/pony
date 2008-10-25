@@ -11,6 +11,16 @@ describe Pony do
 		Pony.mail(:to => 'joe@example.com', :from => 'sender@example.com', :subject => 'hi', :body => 'Hello, Joe.')
 	end
 
+	it "requires :to param" do
+		Pony.stub!(:transport)
+		lambda { Pony.mail({}) }.should raise_error(ArgumentError)
+	end
+
+	it "doesn't require any other param" do
+		Pony.stub!(:transport)
+		lambda { Pony.mail(:to => 'joe@example.com') }.should_not raise_error
+	end
+
 	####################
 
 	describe "builds a TMail object with field:" do
