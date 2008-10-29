@@ -4,7 +4,7 @@
 
 Ruby no longer has to be jealous of PHP's mail() function, which can send an email in a single command.
 
-  Pony.mail(:to => 'you@example.com', :from => 'me@example.com', :subject => 'hi', :body => 'Hello there.)
+  Pony.mail(:to => 'you@example.com', :from => 'me@example.com', :subject => 'hi', :body => 'Hello there.')
 
 Any option key may be omitted except for :to.
 
