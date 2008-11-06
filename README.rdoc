@@ -22,6 +22,8 @@ This can be over-ridden if you specify a via option
 
 Written by Adam Wiggins
 
+Patches contributed by: Mathieu Martin, Arun Thampi, and Freaky
+
 Released under the MIT License: http://www.opensource.org/licenses/mit-license.php
 
 http://github.com/adamwiggins/pony
