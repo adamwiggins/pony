@@ -60,7 +60,7 @@ describe Pony do
 
 		it "transports mail via /usr/sbin/sendmail binary" do
 			pipe = mock('sendmail pipe')
-			IO.should_receive(:popen).with('/usr/sbin/sendmail to', 'w').and_yield(pipe)
+			IO.should_receive(:popen).with('-').and_yield(pipe)
 			pipe.should_receive(:write).with('message')
 			Pony.transport_via_sendmail(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'))
 		end

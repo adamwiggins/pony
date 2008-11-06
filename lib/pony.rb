@@ -39,8 +39,12 @@ module Pony
 	end
 
 	def self.transport_via_sendmail(tmail)
-		IO.popen("#{sendmail_binary} #{tmail.to}", "w") do |pipe|
-			pipe.write tmail.to_s
+		IO.popen('-') do |pipe|
+			if pipe
+				pipe.write(tmail.to_s)
+			else
+				exec(sendmail_binary, tmail.to)
+			end
 		end
 	end
 
