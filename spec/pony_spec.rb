@@ -72,4 +72,21 @@ describe Pony do
 			Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'))
 		end
 	end
+	
+  describe ":via option should over-ride the default transport mechanism" do
+    it "should send via sendmail if :via => sendmail" do
+      Pony.should_receive(:transport_via_sendmail)
+  		Pony.mail(:to => 'joe@example.com', :via => :sendmail)
+		end
+
+    it "should send via smtp if :via => smtp" do
+      Pony.should_receive(:transport_via_smtp)
+  		Pony.mail(:to => 'joe@example.com', :via => :smtp)
+		end
+		
+		it "should raise an error if via is neither smtp nor sendmail" do
+		  lambda { Pony.mail(:to => 'joe@plumber.com', :via => :pigeon) }.should raise_error(ArgumentError)
+	  end
+	end
+	
 end
