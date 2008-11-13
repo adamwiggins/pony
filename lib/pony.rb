@@ -6,15 +6,15 @@ module Pony
 	def self.mail(options)
 		raise(ArgumentError, ":to is required") unless options[:to]
 
-	  unless(via = options[:via].to_s).empty?
-	    if via == 'smtp' || via == 'sendmail'
-	      send("transport_via_#{via}", build_tmail(options))
-      else
-        raise(ArgumentError, ":via must be either smtp or sendmail")
-      end
-    else
-	    transport build_tmail(options)
-    end
+		unless (via = options[:via].to_s).empty?
+			if via == 'smtp' || via == 'sendmail'
+				send("transport_via_#{via}", build_tmail(options))
+			else
+				raise(ArgumentError, ":via must be either smtp or sendmail")
+			end
+		else
+			transport build_tmail(options)
+		end
 	end
 
 	def self.build_tmail(options)
