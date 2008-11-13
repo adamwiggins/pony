@@ -1,19 +1,24 @@
 require 'rubygems'
 require 'net/smtp'
-require 'tmail'
+begin
+	require 'tmail'
+rescue LoadError
+	require 'actionmailer'
+end
 
 module Pony
 	def self.mail(options)
 		raise(ArgumentError, ":to is required") unless options[:to]
 
-		unless (via = options[:via].to_s).empty?
-			if via == 'smtp' || via == 'sendmail'
+		via = options.delete(:via)
+		if via.nil?
+			transport build_tmail(options)
+		else
+			if via_options.include?(via.to_s)
 				send("transport_via_#{via}", build_tmail(options))
 			else
 				raise(ArgumentError, ":via must be either smtp or sendmail")
 			end
-		else
-			transport build_tmail(options)
 		end
 	end
 
@@ -27,15 +32,19 @@ module Pony
 	end
 
 	def self.sendmail_binary
-		"/usr/sbin/sendmail"
+		@sendmail_binary ||= `which sendmail`.chomp
 	end
 
 	def self.transport(tmail)
-		if File.exists? sendmail_binary
+		if File.executable? sendmail_binary
 			transport_via_sendmail(tmail)
 		else
 			transport_via_smtp(tmail)
 		end
+	end
+
+	def self.via_options
+		%w(sendmail smtp)
 	end
 
 	def self.transport_via_sendmail(tmail)

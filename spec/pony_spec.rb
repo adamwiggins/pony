@@ -47,7 +47,7 @@ describe Pony do
 
 	describe "transport" do
 		it "transports via the sendmail binary if it exists" do
-			Pony.stub!(:sendmail_binary).and_return(__FILE__)
+			File.stub!(:executable?).and_return(true)
 			Pony.should_receive(:transport_via_sendmail).with(:tmail)
 			Pony.transport(:tmail)
 		end
