@@ -6,15 +6,15 @@ module Pony
 	def self.mail(options)
 		raise(ArgumentError, ":to is required") unless options[:to]
 
-	  unless(via = options[:via].to_s).empty?
-	    if via == 'smtp' || via == 'sendmail'
-	      send("transport_via_#{via}", build_tmail(options))
-      else
-        raise(ArgumentError, ":via must be either smtp or sendmail")
-      end
-    else
-	    transport build_tmail(options)
-    end
+		unless(via = options[:via].to_s).empty?
+			if via == 'smtp' || via == 'sendmail'
+				send("transport_via_#{via}", build_tmail(options), options)
+			else
+				raise(ArgumentError, ":via must be either smtp or sendmail")
+			end
+		else
+			transport build_tmail(options)
+		end
 	end
 
 	def self.build_tmail(options)
@@ -38,7 +38,7 @@ module Pony
 		end
 	end
 
-	def self.transport_via_sendmail(tmail)
+	def self.transport_via_sendmail(tmail, options = {})
 		IO.popen('-') do |pipe|
 			if pipe
 				pipe.write(tmail.to_s)
@@ -48,8 +48,14 @@ module Pony
 		end
 	end
 
-	def self.transport_via_smtp(tmail)
-		Net::SMTP.start('localhost') do |smtp|
+	def self.transport_via_smtp(tmail, options = {:smtp => {}})
+		options = options[:smtp]
+                # Credits for Sinatra::Mailer and Rhyhann
+		options_array = options.empty? ?
+				['localhost'                                           ] :
+				[options[:host], options[:port].to_i, options[:domain],
+				 options[:user], options[:pass],      options[:auth]   ]
+		Net::SMTP.start(*options_array) do |smtp|
 			smtp.sendmail(tmail.to_s, tmail.from, tmail.to)
 		end
 	end
