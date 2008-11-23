@@ -50,7 +50,7 @@ module Pony
 
 	def self.transport_via_smtp(tmail, options = {:smtp => {}})
 		options = options[:smtp]
-                # Credits for Sinatra::Mailer and Rhyhann
+                # Credits for Sinatra::Mailer
 		options_array = options.empty? ?
 				['localhost'                                           ] :
 				[options[:host], options[:port].to_i, options[:domain],

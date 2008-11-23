@@ -33,7 +33,7 @@ You can also specify options for SMTP:
 
 Written by Adam Wiggins
 
-Patches contributed by: Mathieu Martin, Arun Thampi, and Thomas Hurst
+Patches contributed by: Mathieu Martin, Arun Thampi, Thomas Hurst and Othmane Benkirane
 
 Released under the MIT License: http://www.opensource.org/licenses/mit-license.php
 
