@@ -48,25 +48,19 @@ module Pony
 	end
 
 	def self.transport_via_sendmail(tmail, options={})
-		IO.popen('-') do |pipe|
+		IO.popen('-', 'w+') do |pipe|
 			if pipe
 				pipe.write(tmail.to_s)
 			else
-				exec(sendmail_binary, tmail.to)
+				exec(sendmail_binary, *tmail.to)
 			end
 		end
 	end
 
 	def self.transport_via_smtp(tmail, options={})
-		options = options[:smtp] || {}
-
-		# Credits for Sinatra::Mailer
-		options_array = options.empty? ? [ 'localhost' ] :
-				[options[:host], options[:port].to_i, options[:domain],
-				 options[:user], options[:pass], options[:auth] ]
-
-		Net::SMTP.start(*options_array) do |smtp|
-			smtp.sendmail(tmail.to_s, tmail.from, tmail.to)
-		end
+		o = options[:smtp] || {}
+		smtp = Net::SMTP.new(o[:host], o[:port])
+		smtp.start(o[:domain], o[:user], o[:password], o[:auth])
+		smtp.finish
 	end
 end
