@@ -85,8 +85,18 @@ describe Pony do
         Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'), o)
       end
 
+      it "starts the job" do
+        @smtp.should_receive(:start)
+        Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'))
+      end
+
       it "sends a tmail message" do
         @smtp.should_receive(:send_message)
+        Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'))
+      end
+
+      it "finishes the job" do
+        @smtp.should_receive(:finish)
         Pony.transport_via_smtp(mock('tmail', :to => 'to', :from => 'from', :to_s => 'message'))
       end
 
