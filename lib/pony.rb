@@ -59,7 +59,7 @@ module Pony
 
   def self.transport_via_smtp(tmail, options={:smtp => {}})
     default_options = {:smtp => { :host => 'localhost', :port => '25', :domain => 'localhost.localdomain' }}
-    o = options[:smtp].merge(default_options[:smtp])
+    o = default_options[:smtp].merge(options[:smtp])
     smtp = Net::SMTP.new(o[:host], o[:port])
     if o.include?(:auth)
       smtp.start(o[:domain], o[:user], o[:password], o[:auth])
