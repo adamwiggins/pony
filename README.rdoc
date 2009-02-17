@@ -34,7 +34,7 @@ You can also specify options for SMTP:
 Written by Adam Wiggins
 
 Patches contributed by: Mathieu Martin, Arun Thampi, Thomas Hurst, Stephen
-Celis, and Othmane Benkirane
+Celis, Othmane Benkirane, and Neil Mock
 
 Released under the MIT License: http://www.opensource.org/licenses/mit-license.php
 
