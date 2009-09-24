@@ -21,12 +21,12 @@ This can be over-ridden if you specify a via option
 You can also specify options for SMTP:
 
   Pony.mail(:to => 'you@example.com', :via => :smtp, :smtp => {
-    :host   => 'smtp.yourserver.com',
-    :port   => '25',
-    :user   => 'user',
-    :pass   => 'pass',
-    :auth   => :plain # :plain, :login, :cram_md5, no auth by default
-    :domain => "localhost.localdomain" # the HELO domain provided by the client to the server
+    :host     => 'smtp.yourserver.com',
+    :port     => '25',
+    :user     => 'user',
+    :password => 'pass',
+    :auth     => :plain,           # :plain, :login, :cram_md5, no auth by default
+    :domain   => "example.com"     # the HELO domain provided by the client to the server
   }
 
 == Meta
