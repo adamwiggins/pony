@@ -1,3 +1,8 @@
+
+This fork is no longer maintained.  Please visit: http://github.com/benprew/pony
+
+--------------------------------------------------------
+
 = Pony, the express way to send email in Ruby
 
 == Overview
